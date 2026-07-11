@@ -1,0 +1,44 @@
+{
+  "name": "fitbuddy-ai",
+  "description": "FitBuddy AI – Personal Fitness & Wellness Coach powered by IBM watsonx Orchestrate",
+  "keywords": ["fitness", "ai", "wellness", "ibm", "watsonx", "flask"],
+  "website": "https://github.com/fitbuddy-ai",
+  "success_url": "/",
+  "scripts": {
+    "postdeploy": "echo 'FitBuddy AI deployed successfully'"
+  },
+  "env": {
+    "SECRET_KEY": {
+      "description": "Flask secret key for session management",
+      "generator": "secret"
+    },
+    "WATSONX_API_KEY": {
+      "description": "IBM watsonx Orchestrate API key",
+      "required": false
+    },
+    "WATSONX_PROJECT_ID": {
+      "description": "IBM watsonx Project ID",
+      "required": false
+    },
+    "WATSONX_URL": {
+      "description": "IBM watsonx API endpoint URL",
+      "value": "https://us-south.ml.cloud.ibm.com",
+      "required": false
+    },
+    "FLASK_ENV": {
+      "description": "Flask environment",
+      "value": "production"
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "free"
+    }
+  },
+  "buildpacks": [
+    {
+      "url": "heroku/python"
+    }
+  ]
+}

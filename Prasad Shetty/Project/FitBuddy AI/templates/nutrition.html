@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% block title %}Nutrition Planner – FitBuddy AI{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <div class="container text-center">
+    <span class="section-label"><i class="bi bi-egg-fried me-1"></i> Nutrition Planner</span>
+    <h1 class="page-hero-title mt-2">Personalised Meal Plans</h1>
+    <p class="page-hero-sub mt-2">Choose your diet preference and get a full day meal plan with balanced nutrition.</p>
+  </div>
+</div>
+
+<div class="container py-5">
+  <!-- Diet Selector -->
+  <div class="text-center mb-5">
+    <h5 class="fw-bold mb-3">Select Your Diet Preference</h5>
+    <div class="d-flex justify-content-center gap-3 flex-wrap">
+      {% for val, label, icon, color in [
+        ("vegetarian","Vegetarian","bi-leaf","#16a34a"),
+        ("non_vegetarian","Non-Vegetarian","bi-droplet","#ef4444"),
+        ("vegan","Vegan","bi-flower1","#7c3aed"),
+      ] %}
+      <button class="diet-btn" data-diet="{{ val }}"
+        style="background:white;border:2px solid #e2e8f0;border-radius:14px;padding:18px 28px;cursor:pointer;transition:all .3s;font-weight:600;min-width:150px;"
+        onclick="selectDiet(this, '{{ val }}', '{{ color }}')">
+        <i class="bi {{ icon }} d-block mb-2" style="font-size:2rem;color:{{ color }};"></i>
+        {{ label }}
+      </button>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Meal Plan Result -->
+  <div id="nutritionResult" class="d-none fade-in">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h4 class="fw-bold mb-1" id="dietTitle">Today's Meal Plan</h4>
+        <p class="text-muted small mb-0">Balanced macronutrient distribution for optimal health</p>
+      </div>
+      <span class="badge rounded-pill px-3 py-2" id="dietBadge" style="font-size:.8rem;background:var(--primary-light);color:var(--primary-dark);"></span>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-md-6">
+        <div class="card-fit p-4">
+          <h6 class="fw-bold mb-3" style="color:#f59e0b;"><i class="bi bi-sunrise me-2"></i>Breakfast</h6>
+          <div id="breakfastItems"></div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card-fit p-4">
+          <h6 class="fw-bold mb-3" style="color:var(--primary);"><i class="bi bi-sun me-2"></i>Lunch</h6>
+          <div id="lunchItems"></div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card-fit p-4">
+          <h6 class="fw-bold mb-3" style="color:#6366f1;"><i class="bi bi-moon me-2"></i>Dinner</h6>
+          <div id="dinnerItems"></div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card-fit p-4">
+          <h6 class="fw-bold mb-3" style="color:#ec4899;"><i class="bi bi-clock me-2"></i>Snacks</h6>
+          <div id="snackItems"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Nutrition Tips -->
+    <div class="card-fit p-4 mt-4" style="background:var(--surface-2);">
+      <h6 class="fw-bold mb-3"><i class="bi bi-lightbulb text-warning me-2"></i>Nutrition Tips</h6>
+      <div class="row g-2">
+        {% for tip in [
+          "Eat every 3–4 hours to maintain steady energy levels.",
+          "Include protein in every meal to support muscle repair.",
+          "Choose whole grains over refined carbohydrates.",
+          "Stay hydrated — drink water with every meal.",
+          "Eat colourful vegetables to maximise micronutrient intake.",
+          "Limit processed foods and added sugars.",
+        ] %}
+        <div class="col-md-6">
+          <div class="d-flex gap-2 align-items-start">
+            <i class="bi bi-check-circle-fill text-success flex-shrink-0 mt-1" style="font-size:.85rem;"></i>
+            <span class="small text-muted">{{ tip }}</span>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div id="nutritionEmpty" class="text-center py-5">
+    <div style="font-size:5rem;margin-bottom:1rem;">🥗</div>
+    <h5 class="fw-bold text-muted">Select a diet preference above</h5>
+    <p class="text-muted small">Your personalised meal plan will appear here</p>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const mealColors = {
+  vegetarian: {badge:'#16a34a', title:'Vegetarian Meal Plan'},
+  non_vegetarian: {badge:'#ef4444', title:'Non-Vegetarian Meal Plan'},
+  vegan: {badge:'#7c3aed', title:'Vegan Meal Plan'},
+};
+
+function renderMealItems(containerId, items) {
+  const el = document.getElementById(containerId);
+  el.innerHTML = items.map(item => `
+    <div class="d-flex align-items-center gap-2 mb-2">
+      <i class="bi bi-check-circle-fill text-success flex-shrink-0"></i>
+      <span class="small">${item}</span>
+    </div>`).join('');
+}
+
+async function selectDiet(btn, diet, color) {
+  // Highlight
+  document.querySelectorAll('.diet-btn').forEach(b => {
+    b.style.borderColor = '#e2e8f0';
+    b.style.background  = 'white';
+    b.style.color       = '#0f172a';
+    b.style.transform   = 'none';
+  });
+  btn.style.borderColor = color;
+  btn.style.background  = color + '18';
+  btn.style.transform   = 'scale(1.05)';
+
+  const res  = await fetch('/api/nutrition', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({diet}),
+  });
+  const data = await res.json();
+  const plan = data.plan;
+
+  renderMealItems('breakfastItems', plan.breakfast);
+  renderMealItems('lunchItems',     plan.lunch);
+  renderMealItems('dinnerItems',    plan.dinner);
+  renderMealItems('snackItems',     plan.snacks);
+
+  const info = mealColors[diet.replace('-','_')] || mealColors.vegetarian;
+  document.getElementById('dietTitle').textContent = info.title;
+  const badge = document.getElementById('dietBadge');
+  badge.textContent = data.diet.replace(/_/g,' ').replace(/\b\w/g, c => c.toUpperCase());
+  badge.style.background = info.badge + '20';
+  badge.style.color      = info.badge;
+
+  document.getElementById('nutritionResult').classList.remove('d-none');
+  document.getElementById('nutritionEmpty').classList.add('d-none');
+}
+</script>
+{% endblock %}

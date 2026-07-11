@@ -1,0 +1,206 @@
+{% extends "base.html" %}
+{% block title %}Calorie Calculator – FitBuddy AI{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <div class="container text-center">
+    <span class="section-label"><i class="bi bi-fire me-1"></i> Calorie Calculator</span>
+    <h1 class="page-hero-title mt-2">Calculate Your Daily Calories</h1>
+    <p class="page-hero-sub mt-2">Find your BMR and Total Daily Energy Expenditure using the Mifflin–St Jeor equation.</p>
+  </div>
+</div>
+
+<div class="container py-5">
+  <div class="row g-5">
+
+    <!-- Form -->
+    <div class="col-lg-5">
+      <div class="card-fit p-4">
+        <h5 class="fw-bold mb-4"><i class="bi bi-person-fill me-2 text-success"></i>Your Details</h5>
+
+        <div class="row g-3 mb-3">
+          <div class="col-6">
+            <label class="form-label-fit">Age</label>
+            <input type="number" class="form-control-fit" id="calAge" placeholder="Years" min="10" max="100">
+          </div>
+          <div class="col-6">
+            <label class="form-label-fit">Gender</label>
+            <select class="form-select-fit" id="calGender">
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row g-3 mb-3">
+          <div class="col-6">
+            <label class="form-label-fit">Height (cm)</label>
+            <input type="number" class="form-control-fit" id="calHeight" placeholder="e.g. 170" min="100" max="250">
+          </div>
+          <div class="col-6">
+            <label class="form-label-fit">Weight (kg)</label>
+            <input type="number" class="form-control-fit" id="calWeight" placeholder="e.g. 70" min="20" max="300">
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label-fit">Activity Level</label>
+          <select class="form-select-fit" id="calActivity">
+            <option value="sedentary">Sedentary (desk job, no exercise)</option>
+            <option value="light">Lightly Active (1–3 days/week)</option>
+            <option value="moderate" selected>Moderately Active (3–5 days/week)</option>
+            <option value="active">Very Active (6–7 days/week)</option>
+            <option value="very_active">Extra Active (athlete/physical job)</option>
+          </select>
+        </div>
+
+        <div id="calAlert" class="alert-fit alert-danger mb-3 d-none"></div>
+
+        <button class="btn-submit" onclick="calculateCalories()">
+          <i class="bi bi-fire me-2"></i>Calculate Calories
+        </button>
+      </div>
+
+      <!-- Info card -->
+      <div class="card-fit p-4 mt-4" style="background:var(--surface-2);">
+        <h6 class="fw-bold mb-3"><i class="bi bi-info-circle text-info me-2"></i>How It Works</h6>
+        <p class="small text-muted mb-2"><strong>BMR</strong> — Basal Metabolic Rate: calories burned at complete rest.</p>
+        <p class="small text-muted mb-2"><strong>TDEE</strong> — Total Daily Energy Expenditure: BMR × activity multiplier.</p>
+        <p class="small text-muted mb-0"><strong>Equation</strong> — Mifflin–St Jeor (1990), the gold standard for calorie estimation.</p>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div class="col-lg-7">
+      <div id="calResult" class="d-none fade-in">
+        <!-- Main grid -->
+        <div class="row g-3 mb-4">
+          <div class="col-sm-6">
+            <div class="stat-highlight">
+              <div style="font-size:.78rem;opacity:.7;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px;">BMR</div>
+              <div class="value" id="calBMR">–</div>
+              <div class="unit">kcal / day</div>
+              <div class="desc">Resting metabolic rate</div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="stat-highlight" style="background:linear-gradient(135deg,#2563eb,#1d4ed8);">
+              <div style="font-size:.78rem;opacity:.7;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px;">Daily Calories (TDEE)</div>
+              <div class="value" id="calTDEE">–</div>
+              <div class="unit">kcal / day</div>
+              <div class="desc">To maintain current weight</div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="stat-highlight" style="background:linear-gradient(135deg,#d97706,#b45309);">
+              <div style="font-size:.78rem;opacity:.7;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px;">Weight Loss</div>
+              <div class="value" id="calLoss">–</div>
+              <div class="unit">kcal / day</div>
+              <div class="desc">500 kcal deficit (~0.5 kg/week)</div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="stat-highlight" style="background:linear-gradient(135deg,#7c3aed,#6d28d9);">
+              <div style="font-size:.78rem;opacity:.7;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px;">Weight Gain</div>
+              <div class="value" id="calGain">–</div>
+              <div class="unit">kcal / day</div>
+              <div class="desc">300 kcal surplus (lean bulk)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Macros guide -->
+        <div class="card-fit p-4 mb-4">
+          <h6 class="fw-bold mb-3">Recommended Macronutrient Split</h6>
+          <div class="mb-3">
+            <div class="d-flex justify-content-between mb-1">
+              <span class="small fw-semibold">Protein (30%)</span>
+              <span class="small text-muted" id="proteinG">–</span>
+            </div>
+            <div class="progress-fit"><div class="bar" style="width:30%;background:linear-gradient(90deg,#ef4444,#f87171);"></div></div>
+          </div>
+          <div class="mb-3">
+            <div class="d-flex justify-content-between mb-1">
+              <span class="small fw-semibold">Carbohydrates (45%)</span>
+              <span class="small text-muted" id="carbsG">–</span>
+            </div>
+            <div class="progress-fit"><div class="bar" style="width:45%;background:linear-gradient(90deg,#f59e0b,#fbbf24);"></div></div>
+          </div>
+          <div>
+            <div class="d-flex justify-content-between mb-1">
+              <span class="small fw-semibold">Fats (25%)</span>
+              <span class="small text-muted" id="fatG">–</span>
+            </div>
+            <div class="progress-fit"><div class="bar" style="width:25%;background:linear-gradient(90deg,#3b82f6,#60a5fa);"></div></div>
+          </div>
+        </div>
+
+        <!-- Nutrition tips -->
+        <div class="card-fit p-4" style="background:var(--surface-2);">
+          <h6 class="fw-bold mb-2"><i class="bi bi-lightbulb text-warning me-2"></i>Tips for Your Calorie Goals</h6>
+          <ul class="small text-muted mb-0 ps-3">
+            <li class="mb-1">Weigh yourself weekly (same time, same conditions) for accurate tracking.</li>
+            <li class="mb-1">For weight loss, never go below 1200 kcal (women) or 1500 kcal (men).</li>
+            <li class="mb-1">Prioritise protein — it preserves muscle during a caloric deficit.</li>
+            <li>Adjust your TDEE every 4–6 weeks as your weight changes.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div id="calEmpty" class="text-center py-5">
+        <div style="font-size:5rem;margin-bottom:1rem;">🔥</div>
+        <h5 class="fw-bold text-muted">Fill in your details to calculate calories</h5>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+async function calculateCalories() {
+  const age      = document.getElementById('calAge').value;
+  const gender   = document.getElementById('calGender').value;
+  const height   = document.getElementById('calHeight').value;
+  const weight   = document.getElementById('calWeight').value;
+  const activity = document.getElementById('calActivity').value;
+  const alertEl  = document.getElementById('calAlert');
+
+  alertEl.classList.add('d-none');
+  if (!age || !height || !weight) {
+    alertEl.textContent = 'Please fill in all fields.';
+    alertEl.classList.remove('d-none');
+    return;
+  }
+
+  const res  = await fetch('/api/calories', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({age: parseInt(age), gender, height: parseFloat(height),
+                          weight: parseFloat(weight), activity}),
+  });
+  const data = await res.json();
+
+  if (data.error) {
+    alertEl.textContent = data.error;
+    alertEl.classList.remove('d-none');
+    return;
+  }
+
+  document.getElementById('calBMR').textContent  = data.bmr.toLocaleString();
+  document.getElementById('calTDEE').textContent = data.tdee.toLocaleString();
+  document.getElementById('calLoss').textContent = data.weight_loss.toLocaleString();
+  document.getElementById('calGain').textContent = data.weight_gain.toLocaleString();
+
+  // Macros
+  const tdee = data.tdee;
+  document.getElementById('proteinG').textContent = `${Math.round(tdee*0.30/4)}g (${Math.round(tdee*0.30)} kcal)`;
+  document.getElementById('carbsG').textContent   = `${Math.round(tdee*0.45/4)}g (${Math.round(tdee*0.45)} kcal)`;
+  document.getElementById('fatG').textContent     = `${Math.round(tdee*0.25/9)}g (${Math.round(tdee*0.25)} kcal)`;
+
+  document.getElementById('calResult').classList.remove('d-none');
+  document.getElementById('calEmpty').classList.add('d-none');
+}
+</script>
+{% endblock %}

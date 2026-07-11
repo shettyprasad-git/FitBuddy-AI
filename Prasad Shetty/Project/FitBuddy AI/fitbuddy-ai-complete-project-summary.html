@@ -1,0 +1,277 @@
+
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>FitBuddy AI – Project Summary</title>
+<style>
+*,*::before,*::after{box-sizing:border-box}
+body{font-family:-apple-system,"Segoe UI",system-ui,sans-serif;font-size:14px;line-height:1.6;background:#f7f8fa;color:#1f2328;margin:0;padding:24px 16px}
+.wrap{max-width:760px;margin:0 auto}
+h1{font-size:1.55rem;font-weight:800;letter-spacing:-.5px;color:#0f172a;margin:0 0 4px}
+.sub{color:#57606a;margin:0 0 28px;font-size:.9rem}
+.badge{display:inline-block;background:#dcfce7;color:#15803d;font-size:.7rem;font-weight:700;padding:3px 10px;border-radius:100px;margin-left:8px;vertical-align:middle}
+.badge-live{background:#dbeafe;color:#1d4ed8}
+.badge-warn{background:#fef3c7;color:#92400e}
+h2{font-size:.95rem;font-weight:700;color:#0f172a;margin:0 0 10px;border-bottom:2px solid #16a34a;padding-bottom:5px}
+.section{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:16px 20px;margin-bottom:16px}
+table{width:100%;border-collapse:collapse;font-size:.83rem}
+th{text-align:left;color:#57606a;font-weight:600;padding:5px 10px;background:#f7f8fa;border-bottom:1px solid #e5e7eb;font-size:.74rem;text-transform:uppercase;letter-spacing:.4px}
+td{padding:6px 10px;border-bottom:1px solid #f0f2f4;vertical-align:top}
+tr:last-child td{border-bottom:none}
+code{background:#f0f2f4;padding:2px 6px;border-radius:5px;font-size:.8rem;font-family:"Cascadia Code",Consolas,monospace;color:#0f172a}
+.tag{display:inline-block;font-size:.68rem;font-weight:600;padding:2px 7px;border-radius:6px;margin-right:2px}
+.tag-green{background:#dcfce7;color:#15803d}
+.tag-blue{background:#dbeafe;color:#1d4ed8}
+.tag-orange{background:#ffedd5;color:#c2410c}
+.tag-purple{background:#ede9fe;color:#6d28d9}
+.cmd{background:#0f172a;color:#4ade80;font-family:Consolas,monospace;font-size:.8rem;padding:13px 16px;border-radius:8px;overflow-x:auto;line-height:1.75;white-space:pre}
+.cmd .dim{color:#64748b}
+.status-ok{color:#16a34a;font-weight:700;font-size:.78rem}
+.status-warn{color:#d97706;font-weight:700;font-size:.78rem}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.layer{border-left:3px solid #e5e7eb;padding:8px 12px;margin-bottom:8px;border-radius:0 6px 6px 0;font-size:.83rem}
+.layer.active{border-color:#16a34a;background:#f0fdf4}
+.layer.pending{border-color:#f59e0b;background:#fffbeb}
+.layer.always{border-color:#6366f1;background:#f5f3ff}
+.layer-title{font-weight:700;margin-bottom:2px}
+.pill{display:inline-block;font-size:.65rem;font-weight:700;padding:1px 7px;border-radius:100px;vertical-align:middle;margin-left:5px}
+.pill-green{background:#dcfce7;color:#15803d}
+.pill-amber{background:#fef3c7;color:#92400e}
+.pill-blue{background:#dbeafe;color:#1d4ed8}
+.steps li{margin-bottom:5px;font-size:.83rem}
+footer{text-align:center;color:#9ca3af;font-size:.7rem;margin-top:28px;padding-top:12px;border-top:1px solid #e5e7eb}
+@media(max-width:540px){.grid2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>FitBuddy AI <span class="badge">Production Ready</span> <span class="badge badge-live">Live AI</span></h1>
+  <p class="sub">Personal Fitness &amp; Wellness Coach — Python Flask · Bootstrap 5 · Chart.js · IBM watsonx.ai + Orchestrate</p>
+
+  
+  <div class="section">
+    <h2>Quick Start</h2>
+    <div class="cmd"><span class="dim"># Install dependencies</span>
+pip install -r requirements.txt
+
+<span class="dim"># Run</span>
+python app.py
+
+<span class="dim"># Open browser</span>
+http://localhost:5000</div>
+  </div>
+
+  
+  <div class="section">
+    <h2>AI Architecture — 3-Layer Fallback</h2>
+
+    <div class="layer pending">
+      <div class="layer-title">Layer 1 — IBM watsonx Orchestrate <span class="pill pill-amber">Needs Publish</span></div>
+      <code>POST https://api.au-syd.watson-orchestrate.cloud.ibm.com/v1/chat</code><br />
+      Agent GUID: <code>ebea739a-784d-43d1-a90b-5b06d8591404</code><br />
+      <span style="color:#92400e;font-size:.78rem">Agent created but not yet published. Click <strong>Publish</strong> in WXO UI to activate.</span>
+    </div>
+
+    <div class="layer active">
+      <div class="layer-title">Layer 2 — IBM watsonx.ai Chat API <span class="pill pill-green">Active Now</span></div>
+      <code>POST https://au-syd.ml.cloud.ibm.com/ml/v1/text/chat</code><br />
+      Model: <code>meta-llama/llama-3-3-70b-instruct</code>  ·  Project: <code>f8aa1369-b14a-4ff5-8de2-c315ed2be5cc</code>
+    </div>
+
+    <div class="layer always">
+      <div class="layer-title">Layer 3 — Built-in Fitness Knowledge Base <span class="pill pill-blue">Always Ready</span></div>
+      21 topic categories · 532 keywords · zero network dependency
+    </div>
+
+    <div style="margin-top:12px;padding:10px 14px;background:#f0fdf4;border-radius:8px;font-size:.8rem">
+      <strong style="color:#16a34a">Topic Filter</strong> runs <em>before</em> all AI layers — 21 categories, 532 deterministic keywords.
+      Non-fitness messages are rejected immediately; the AI is never called.
+    </div>
+  </div>
+
+  
+  <div class="section">
+    <h2>Activate Layer 1 — Publish the Agent (1 step)</h2>
+    <ol class="steps">
+      <li>Go to <strong>au-syd.watson-orchestrate.cloud.ibm.com</strong></li>
+      <li>Open <strong>FitBuddy AI</strong> agent</li>
+      <li>Click <strong>Preview</strong> — verify it responds</li>
+      <li>Click <strong>Publish</strong> (top-right) → state changes from <em>Draft</em> to <em>Published</em></li>
+      <li>Restart Flask — startup banner shows <code>Layer 1 Orchestrate: ready</code></li>
+    </ol>
+    <p style="font-size:.78rem;color:#57606a;margin:8px 0 0"><strong>No code changes needed.</strong> Agent GUID is already set in <code>.env</code>.</p>
+  </div>
+
+  
+  <div class="section">
+    <h2>File Manifest (22 Files)</h2>
+    <table>
+      <tr><th>File</th><th>Description</th></tr>
+      <tr><td><code>app.py</code></td><td>Flask app — all routes, API endpoints, startup status banner</td></tr>
+      <tr><td><code>requirements.txt</code></td><td>Flask, python-dotenv, requests, gunicorn</td></tr>
+      <tr><td><code>app.json</code></td><td>IBM Cloud / Heroku deployment config</td></tr>
+      <tr><td><code>.env</code></td><td>Runtime credentials — git-ignored, never committed</td></tr>
+      <tr><td><code>.env.example</code></td><td>Credential template — safe to commit</td></tr>
+      <tr><td><code>README.md</code></td><td>Full documentation, API reference, deployment guide</td></tr>
+      <tr><td><code>services/__init__.py</code></td><td>Python package marker</td></tr>
+      <tr><td><code>services/orchestrate.py</code></td><td>IBM watsonx integration — IAM token cache, 3-layer fallback, health check, startup log</td></tr>
+      <tr><td><code>services/topic_filter.py</code></td><td>Server-side topic guard — 21 categories, 532 keywords, 2-tier regex matching</td></tr>
+      <tr><td><code>static/css/style.css</code></td><td>Green/white theme, glassmorphism, animations (~970 lines)</td></tr>
+      <tr><td><code>static/js/main.js</code></td><td>Global JS — navbar scroll, intersection observer, toasts</td></tr>
+      <tr><td><code>static/js/chat.js</code></td><td>AI Chat JS — fetch /api/chat, typing animation, source badge</td></tr>
+      <tr><td><code>static/images/favicon.svg</code></td><td>SVG favicon — served at /favicon.ico</td></tr>
+      <tr><td><code>templates/base.html</code></td><td>Base layout — sticky navbar (11 links), mobile offcanvas, footer</td></tr>
+      <tr><td><code>templates/index.html</code></td><td>Home — hero, features grid, benefits, CTA</td></tr>
+      <tr><td><code>templates/chat.html</code></td><td>AI Chat — ChatGPT-style UI, sidebar prompts, source label</td></tr>
+      <tr><td><code>templates/workout.html</code></td><td>Workout Planner — goal/level/duration → 7-day schedule</td></tr>
+      <tr><td><code>templates/nutrition.html</code></td><td>Nutrition — diet selector, breakfast/lunch/dinner/snacks</td></tr>
+      <tr><td><code>templates/bmi.html</code></td><td>BMI Calculator — animated gauge, ideal weight, suggestion</td></tr>
+      <tr><td><code>templates/calories.html</code></td><td>Calorie Calculator — BMR/TDEE/macros via Mifflin–St Jeor</td></tr>
+      <tr><td><code>templates/water.html</code></td><td>Water Tracker — animated glass, hourly schedule</td></tr>
+      <tr><td><code>templates/dashboard.html</code></td><td>Progress Dashboard — 5 Chart.js charts</td></tr>
+      <tr><td><code>templates/motivation.html</code></td><td>Motivation — quotes, tips, habits, challenges + refresh</td></tr>
+      <tr><td><code>templates/about.html</code></td><td>About — IBM watsonx Orchestrate, IBM Cloud Lite</td></tr>
+      <tr><td><code>templates/contact.html</code></td><td>Contact — validated form, FAQ accordion</td></tr>
+    </table>
+  </div>
+
+  
+  <div class="section">
+    <h2>Pages &amp; Routes (12 Routes)</h2>
+    <table>
+      <tr><th>Route</th><th>Page</th><th>Key Features</th></tr>
+      <tr><td><code>/</code></td><td>Home</td><td>Hero with floating cards, features grid, benefits, CTA</td></tr>
+      <tr><td><code>/chat</code></td><td>AI Chat</td><td>ChatGPT UI, sidebar prompts, typing animation, live watsonx.ai</td></tr>
+      <tr><td><code>/workout</code></td><td>Workout Planner</td><td>4 goals × 3 levels × dynamic duration → 7-day plan</td></tr>
+      <tr><td><code>/nutrition</code></td><td>Nutrition Planner</td><td>Vegetarian / Non-Veg / Vegan — 4 meal categories</td></tr>
+      <tr><td><code>/bmi</code></td><td>BMI Calculator</td><td>Animated gauge, category, ideal weight range, suggestion</td></tr>
+      <tr><td><code>/calories</code></td><td>Calorie Calculator</td><td>BMR, TDEE, weight loss/gain, macro breakdown</td></tr>
+      <tr><td><code>/water</code></td><td>Water Tracker</td><td>Animated glass, hourly schedule, climate adjustment</td></tr>
+      <tr><td><code>/dashboard</code></td><td>Progress Dashboard</td><td>BMI trend, calories, water, workout, weight + doughnut</td></tr>
+      <tr><td><code>/motivation</code></td><td>Motivation</td><td>Daily quote, tip, habit, challenge + refresh API</td></tr>
+      <tr><td><code>/about</code></td><td>About</td><td>IBM watsonx Orchestrate, IBM Cloud Lite, AI architecture</td></tr>
+      <tr><td><code>/contact</code></td><td>Contact</td><td>Validated form, FAQ accordion</td></tr>
+      <tr><td><code>/favicon.ico</code></td><td>—</td><td>Redirects to SVG favicon</td></tr>
+    </table>
+  </div>
+
+  
+  <div class="section">
+    <h2>REST API Endpoints (10 Endpoints)</h2>
+    <table>
+      <tr><th>Endpoint</th><th>Method</th><th>Input</th><th>Output</th></tr>
+      <tr><td><code>/api/chat</code></td><td><span class="tag tag-blue">POST</span></td><td>message</td><td>response, source, restricted?, timestamp</td></tr>
+      <tr><td><code>/api/chat/clear</code></td><td><span class="tag tag-orange">POST</span></td><td>—</td><td>status: cleared</td></tr>
+      <tr><td><code>/api/health</code></td><td><span class="tag tag-green">GET</span></td><td>—</td><td>orchestrate, watsonx_ai, fallback status</td></tr>
+      <tr><td><code>/api/workout</code></td><td><span class="tag tag-blue">POST</span></td><td>goal, level, duration</td><td>plan [7 days]</td></tr>
+      <tr><td><code>/api/nutrition</code></td><td><span class="tag tag-blue">POST</span></td><td>diet</td><td>breakfast / lunch / dinner / snacks</td></tr>
+      <tr><td><code>/api/bmi</code></td><td><span class="tag tag-blue">POST</span></td><td>height, weight</td><td>bmi, category, suggestion, color</td></tr>
+      <tr><td><code>/api/calories</code></td><td><span class="tag tag-blue">POST</span></td><td>age, gender, height, weight, activity</td><td>bmr, tdee, weight_loss, weight_gain</td></tr>
+      <tr><td><code>/api/water</code></td><td><span class="tag tag-blue">POST</span></td><td>weight, activity, climate</td><td>ml, liters, glasses</td></tr>
+      <tr><td><code>/api/contact</code></td><td><span class="tag tag-blue">POST</span></td><td>name, email, subject, message</td><td>status, message</td></tr>
+      <tr><td><code>/api/motivation/refresh</code></td><td><span class="tag tag-green">GET</span></td><td>—</td><td>quote, tip, habit, challenge</td></tr>
+    </table>
+  </div>
+
+  
+  <div class="section">
+    <h2>Topic Filter — 21 Categories, 532 Terms</h2>
+    <table>
+      <tr><th>Category</th><th>Sample Keywords</th></tr>
+      <tr><td><code>FITNESS</code></td><td>fitness, exercise, training, sport, active, movement</td></tr>
+      <tr><td><code>GYM</code></td><td>gym, barbell, dumbbell, kettlebell, bench press, rep, set</td></tr>
+      <tr><td><code>WORKOUT</code></td><td>strength, hiit, circuit, tabata, routine, programme, plan</td></tr>
+      <tr><td><code>HOME_WORKOUT</code></td><td>push-up, pull-up, plank, squat, burpee, lunge, no equipment</td></tr>
+      <tr><td><code>YOGA</code></td><td>yoga, asana, vinyasa, pranayama, meditation, sun salutation</td></tr>
+      <tr><td><code>STRETCHING</code></td><td>stretch, foam rolling, mobility, hip flexor, warm up</td></tr>
+      <tr><td><code>CARDIO</code></td><td>cardio, running, cycling, heart rate, vo2 max, marathon</td></tr>
+      <tr><td><code>WEIGHT_LOSS</code></td><td>fat loss, caloric deficit, shredding, slim, belly fat</td></tr>
+      <tr><td><code>MUSCLE_GAIN</code></td><td>hypertrophy, bulk, bodybuilding, gains, lean mass</td></tr>
+      <tr><td><code>NUTRITION</code></td><td>nutrition, diet, healthy eating, clean eating, whole food</td></tr>
+      <tr><td><code>FOOD</code></td><td>protein, carbs, omega-3, chicken, quinoa, greek yogurt</td></tr>
+      <tr><td><code>MEAL_PLAN</code></td><td>meal prep, intermittent fasting, keto, vegan, pre-workout</td></tr>
+      <tr><td><code>CALORIES</code></td><td>calories, kcal, tdee, caloric surplus, energy intake</td></tr>
+      <tr><td><code>BMI</code></td><td>bmi, body mass index, body fat percentage, visceral fat</td></tr>
+      <tr><td><code>BMR</code></td><td>bmr, basal metabolic rate, mifflin, metabolism</td></tr>
+      <tr><td><code>WATER</code></td><td>water, hydration, electrolytes, dehydration, fluid intake</td></tr>
+      <tr><td><code>SLEEP</code></td><td>sleep, recovery, doms, deload, rest day, melatonin</td></tr>
+      <tr><td><code>WELLNESS</code></td><td>wellness, healthy, lifestyle, self-care, cortisol</td></tr>
+      <tr><td><code>MOTIVATION</code></td><td>motivation, goal, progress, discipline, transformation</td></tr>
+      <tr><td><code>SUPPLEMENTS</code></td><td>creatine, bcaa, whey protein, pre-workout, fish oil</td></tr>
+      <tr><td><code>HEALTH_GOALS</code></td><td>blood pressure, bone density, physiotherapy, rehab</td></tr>
+    </table>
+  </div>
+
+  
+  <div class="section">
+    <h2>Test Results</h2>
+    <div class="grid2">
+      <div>
+        <table>
+          <tr><th colspan="2">Page Routes</th></tr>
+          <tr><td><code>/</code></td><td class="status-ok">200 OK</td></tr>
+          <tr><td><code>/chat</code></td><td class="status-ok">200 OK</td></tr>
+          <tr><td><code>/workout</code></td><td class="status-ok">200 OK</td></tr>
+          <tr><td><code>/nutrition</code></td><td class="status-ok">200 OK</td></tr>
+          <tr><td><code>/bmi</code></td><td class="status-ok">200 OK</td></tr>
+          <tr><td><code>/calories</code></td><td class="status-ok">200 OK</td></tr>
+          <tr><td><code>/water</code></td><td class="status-ok">200 OK</td></tr>
+          <tr><td><code>/dashboard</code></td><td class="status-ok">200 OK</td></tr>
+          <tr><td><code>/motivation</code></td><td class="status-ok">200 OK</td></tr>
+          <tr><td><code>/about</code></td><td class="status-ok">200 OK</td></tr>
+          <tr><td><code>/contact</code></td><td class="status-ok">200 OK</td></tr>
+          <tr><td><code>/favicon.ico</code></td><td class="status-ok">200 OK</td></tr>
+        </table>
+      </div>
+      <div>
+        <table>
+          <tr><th colspan="2">API &amp; Filter Tests</th></tr>
+          <tr><td><code>/api/chat</code> fitness</td><td class="status-ok">Accepted → AI</td></tr>
+          <tr><td><code>/api/chat</code> off-topic</td><td class="status-ok">Rejected (filter)</td></tr>
+          <tr><td><code>/api/bmi</code> 170cm/70kg</td><td class="status-ok">24.2 Normal</td></tr>
+          <tr><td><code>/api/calories</code> M/30</td><td class="status-ok">BMR 1699</td></tr>
+          <tr><td><code>/api/water</code> 70kg</td><td class="status-ok">3.0L / 12 glasses</td></tr>
+          <tr><td><code>/api/workout</code></td><td class="status-ok">7 days</td></tr>
+          <tr><td><code>/api/nutrition</code></td><td class="status-ok">4 meals</td></tr>
+          <tr><td><code>/api/health</code></td><td class="status-ok">All layers probed</td></tr>
+          <tr><td>Topic filter tests</td><td class="status-ok">59/59 passed</td></tr>
+          <tr><td>Security scan</td><td class="status-ok">0 credential leaks</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="section">
+    <h2>Integration Status</h2>
+    <table>
+      <tr><th>Variable</th><th>Status</th><th>Value / Purpose</th></tr>
+      <tr><td><code>ORCHESTRATE_API_KEY</code></td><td class="status-ok">Set</td><td>Service credential key for IAM auth</td></tr>
+      <tr><td><code>ORCHESTRATE_URL</code></td><td class="status-ok">Set</td><td>Instance base URL (au-syd)</td></tr>
+      <tr><td><code>ORCHESTRATE_AGENT_ID</code></td><td class="status-warn">Set · Not Published</td><td><code>ebea739a-784d-43d1-a90b-5b06d8591404</code></td></tr>
+      <tr><td><code>IBM_CLOUD_API_KEY</code></td><td class="status-ok">Set</td><td>Account-level key for watsonx.ai</td></tr>
+      <tr><td><code>WATSONX_PROJECT_ID</code></td><td class="status-ok">Set</td><td>watsonx.ai project ID</td></tr>
+      <tr><td><code>WATSONX_CHAT_MODEL</code></td><td class="status-ok">Set · Live</td><td><code>meta-llama/llama-3-3-70b-instruct</code></td></tr>
+      <tr><td><code>SECRET_KEY</code></td><td class="status-ok">Set</td><td>Flask session secret</td></tr>
+    </table>
+  </div>
+
+  
+  <div class="section">
+    <h2>Deploy to IBM Cloud</h2>
+    <div class="cmd">ibmcloud login --sso
+ibmcloud target --cf
+ibmcloud cf push fitbuddy-ai
+ibmcloud cf set-env fitbuddy-ai ORCHESTRATE_API_KEY your-key
+ibmcloud cf set-env fitbuddy-ai ORCHESTRATE_AGENT_ID ebea739a-784d-43d1-a90b-5b06d8591404
+ibmcloud cf set-env fitbuddy-ai IBM_CLOUD_API_KEY your-ibm-key
+ibmcloud cf set-env fitbuddy-ai WATSONX_PROJECT_ID your-project-id
+ibmcloud cf restage fitbuddy-ai</div>
+  </div>
+
+  <footer>Made with IBM Bob</footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+{% block title %}BMI Calculator – FitBuddy AI{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <div class="container text-center">
+    <span class="section-label"><i class="bi bi-person-check me-1"></i> BMI Calculator</span>
+    <h1 class="page-hero-title mt-2">Calculate Your BMI</h1>
+    <p class="page-hero-sub mt-2">Body Mass Index — understand your weight category and get personalised health advice.</p>
+  </div>
+</div>
+
+<div class="container py-5">
+  <div class="row g-5 justify-content-center">
+
+    <!-- Calculator -->
+    <div class="col-lg-5">
+      <div class="card-fit p-4">
+        <h5 class="fw-bold mb-4"><i class="bi bi-calculator me-2 text-success"></i>Enter Your Details</h5>
+
+        <div class="mb-4">
+          <label class="form-label-fit">Height (cm)</label>
+          <div class="input-group">
+            <input type="number" class="form-control-fit" id="bmiHeight" placeholder="e.g. 170" min="50" max="250">
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label-fit">Weight (kg)</label>
+          <input type="number" class="form-control-fit" id="bmiWeight" placeholder="e.g. 70" min="10" max="300">
+        </div>
+
+        <div id="bmiAlert" class="alert-fit alert-danger mb-3 d-none"></div>
+
+        <button class="btn-submit" onclick="calculateBMI()">
+          <i class="bi bi-calculator me-2"></i>Calculate BMI
+        </button>
+      </div>
+
+      <!-- BMI Scale Reference -->
+      <div class="card-fit p-4 mt-4">
+        <h6 class="fw-bold mb-3">BMI Scale Reference</h6>
+        {% for category, range, color, bg in [
+          ("Underweight","< 18.5","#3b82f6","#dbeafe"),
+          ("Normal Weight","18.5 – 24.9","#16a34a","#dcfce7"),
+          ("Overweight","25 – 29.9","#f59e0b","#fef3c7"),
+          ("Obese","≥ 30","#ef4444","#fee2e2"),
+        ] %}
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <div class="d-flex align-items-center gap-2">
+            <div style="width:12px;height:12px;border-radius:3px;background:{{ color }};"></div>
+            <span class="small fw-semibold">{{ category }}</span>
+          </div>
+          <span class="small text-muted">{{ range }}</span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Result -->
+    <div class="col-lg-6">
+      <div id="bmiResultArea" class="d-none fade-in">
+        <!-- Main BMI Value -->
+        <div class="text-center p-5 rounded-3 mb-4" id="bmiMainCard" style="background:linear-gradient(135deg,#0f172a,#1e3a2f);">
+          <div style="font-size:.85rem;font-weight:600;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.5px;">Your BMI</div>
+          <div id="bmiValue" style="font-size:5rem;font-weight:900;color:#4ade80;line-height:1;margin:12px 0;">–</div>
+          <div id="bmiCategory" class="fw-bold" style="font-size:1.3rem;color:#fff;">–</div>
+        </div>
+
+        <!-- BMI Meter -->
+        <div class="card-fit p-4 mb-4">
+          <label class="form-label-fit mb-3">BMI Gauge</label>
+          <div class="bmi-meter mb-1">
+            <div class="bmi-needle" id="bmiNeedle" style="left:0%;"></div>
+          </div>
+          <div class="d-flex justify-content-between mt-2" style="font-size:.7rem;color:var(--text-muted);">
+            <span>10</span><span>18.5</span><span>25</span><span>30</span><span>40+</span>
+          </div>
+        </div>
+
+        <!-- Stats row -->
+        <div class="row g-3 mb-4">
+          <div class="col-4">
+            <div class="result-card">
+              <div class="result-value" id="bmiHeight2">–</div>
+              <div class="result-label">Height (cm)</div>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="result-card">
+              <div class="result-value" id="bmiWeight2">–</div>
+              <div class="result-label">Weight (kg)</div>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="result-card">
+              <div class="result-value" id="bmiIdealWeight">–</div>
+              <div class="result-label">Ideal Weight (kg)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Health Suggestion -->
+        <div class="p-4 rounded-3" id="bmiSuggestionBox" style="background:var(--primary-light);">
+          <h6 class="fw-bold mb-2"><i class="bi bi-lightbulb-fill text-success me-2"></i>Health Suggestion</h6>
+          <p class="small text-muted mb-0" id="bmiSuggestion"></p>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div id="bmiEmpty" class="text-center py-5">
+        <div style="font-size:5rem;margin-bottom:1rem;">⚖️</div>
+        <h5 class="fw-bold text-muted">Enter height and weight to see your BMI</h5>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+async function calculateBMI() {
+  const height = document.getElementById('bmiHeight').value;
+  const weight = document.getElementById('bmiWeight').value;
+  const alertEl = document.getElementById('bmiAlert');
+
+  alertEl.classList.add('d-none');
+
+  if (!height || !weight || height <= 0 || weight <= 0) {
+    alertEl.textContent = 'Please enter valid height and weight.';
+    alertEl.classList.remove('d-none');
+    return;
+  }
+
+  const res  = await fetch('/api/bmi', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({height: parseFloat(height), weight: parseFloat(weight)}),
+  });
+  const data = await res.json();
+
+  if (data.error) {
+    alertEl.textContent = data.error;
+    alertEl.classList.remove('d-none');
+    return;
+  }
+
+  // Update UI
+  document.getElementById('bmiValue').textContent    = data.bmi;
+  document.getElementById('bmiValue').style.color    = data.color;
+  document.getElementById('bmiCategory').textContent = data.category;
+  document.getElementById('bmiSuggestion').textContent = data.suggestion;
+  document.getElementById('bmiHeight2').textContent  = height;
+  document.getElementById('bmiWeight2').textContent  = weight;
+
+  // Ideal weight range (BMI 18.5–24.9)
+  const h = parseFloat(height) / 100;
+  const idealMin = Math.round(18.5 * h * h);
+  const idealMax = Math.round(24.9 * h * h);
+  document.getElementById('bmiIdealWeight').textContent = `${idealMin}–${idealMax}`;
+  document.getElementById('bmiIdealWeight').style.fontSize = '1rem';
+
+  // Needle position: map BMI (10–40) to 0–100%
+  const pct = Math.max(0, Math.min(100, (data.bmi - 10) / 30 * 100));
+  document.getElementById('bmiNeedle').style.left = pct + '%';
+
+  document.getElementById('bmiResultArea').classList.remove('d-none');
+  document.getElementById('bmiEmpty').classList.add('d-none');
+}
+
+// Allow Enter key
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') calculateBMI();
+});
+</script>
+{% endblock %}

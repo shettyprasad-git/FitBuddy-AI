@@ -1,0 +1,233 @@
+{% extends "base.html" %}
+{% block title %}FitBuddy AI – Home{% endblock %}
+
+{% block content %}
+
+<!-- ── Hero ───────────────────────────────────────────────────────────────── -->
+<section class="hero-section">
+  <div class="container position-relative z-1">
+    <div class="row align-items-center g-5 py-4">
+
+      <!-- Left -->
+      <div class="col-lg-6">
+        <div class="hero-badge">
+          <span class="dot"></span>
+          IBM watsonx Orchestrate Powered
+        </div>
+        <h1 class="hero-title mb-4">
+          Your Personal<br>
+          <span class="highlight">AI Fitness</span><br>
+          & Wellness Coach
+        </h1>
+        <p class="hero-subtitle mb-4">
+          Achieve your health goals with intelligent workout plans, personalised nutrition,
+          real-time progress tracking, and an always-on AI coach — powered by IBM watsonx.
+        </p>
+        <div class="d-flex gap-3 flex-wrap mb-5">
+          <a href="{{ url_for('chat') }}" class="btn-primary-custom">
+            <i class="bi bi-robot"></i> Chat with AI Coach
+          </a>
+          <a href="{{ url_for('workout') }}" class="btn-outline-custom">
+            <i class="bi bi-lightning"></i> Plan My Workout
+          </a>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="number">10+</div>
+            <div class="label">AI Tools</div>
+          </div>
+          <div class="hero-stat">
+            <div class="number">100%</div>
+            <div class="label">Free</div>
+          </div>
+          <div class="hero-stat">
+            <div class="number">24/7</div>
+            <div class="label">AI Coaching</div>
+          </div>
+          <div class="hero-stat">
+            <div class="number">IBM</div>
+            <div class="label">Powered</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right -->
+      <div class="col-lg-6">
+        <div class="hero-visual">
+          <div class="hero-card-stack">
+            <div class="hero-main-card">
+              <div class="d-flex align-items-center gap-3 mb-4">
+                <div style="width:48px;height:48px;background:var(--primary);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;color:#fff;">
+                  <i class="bi bi-robot"></i>
+                </div>
+                <div>
+                  <div class="fw-bold text-white">FitBuddy AI</div>
+                  <div style="font-size:.78rem;color:#4ade80;">&#x25CF; Online — Powered by IBM watsonx</div>
+                </div>
+              </div>
+              <div style="background:rgba(22,163,74,.12);border:1px solid rgba(22,163,74,.25);border-radius:12px;padding:14px;color:rgba(255,255,255,.85);font-size:.88rem;line-height:1.6;margin-bottom:1rem;">
+                <i class="bi bi-chat-left-quote me-2 text-success"></i>
+                "Hello! I'm FitBuddy AI. Tell me your fitness goal and I'll create a personalised plan just for you!"
+              </div>
+              <div class="row g-2 mt-2">
+                <div class="col-6">
+                  <div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:12px;text-align:center;">
+                    <div style="font-size:1.5rem;color:#4ade80;font-weight:800;">BMI</div>
+                    <div style="font-size:.72rem;color:rgba(255,255,255,.5);">Calculator</div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:12px;text-align:center;">
+                    <div style="font-size:1.5rem;color:#38bdf8;font-weight:800;">Kcal</div>
+                    <div style="font-size:.72rem;color:rgba(255,255,255,.5);">Calorie Tracker</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="float-card fc-1">
+              <i class="bi bi-fire text-warning me-1"></i> +420 kcal burned today
+            </div>
+            <div class="float-card fc-2">
+              <i class="bi bi-droplet-fill text-info me-1"></i> 2.1L water intake
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── Features ───────────────────────────────────────────────────────────── -->
+<section class="py-6 py-5">
+  <div class="container py-3">
+    <div class="text-center mb-5">
+      <span class="section-label"><i class="bi bi-grid me-1"></i> Features</span>
+      <h2 class="section-title">Everything You Need to Get Fit</h2>
+      <p class="section-subtitle mx-auto mt-2">AI-powered tools designed to help you track, plan, and achieve your fitness goals.</p>
+    </div>
+    <div class="row g-4">
+      {% set features = [
+        ("bi-robot", "green", "AI Fitness Coach", "Chat with our IBM watsonx-powered AI for personalised fitness advice, motivation, and workout recommendations.", url_for('chat')),
+        ("bi-lightning", "blue", "Workout Planner", "Generate custom weekly workout schedules based on your goal, fitness level, and available time.", url_for('workout')),
+        ("bi-egg-fried", "orange", "Nutrition Planner", "Get personalised meal plans for vegetarian, non-vegetarian, or vegan diets with balanced macros.", url_for('nutrition')),
+        ("bi-person-check", "purple", "BMI Calculator", "Calculate your Body Mass Index with a category assessment and evidence-based health suggestions.", url_for('bmi')),
+        ("bi-fire", "cyan", "Calorie Calculator", "Compute your BMR and daily calorie needs using the Mifflin–St Jeor equation.", url_for('calories')),
+        ("bi-droplet", "pink", "Water Intake Tracker", "Find out exactly how much water you need daily based on your weight, activity, and climate.", url_for('water')),
+        ("bi-bar-chart", "green", "Progress Dashboard", "Visualise your BMI, calories, hydration, and weekly workouts with interactive Chart.js charts.", url_for('dashboard')),
+        ("bi-stars", "blue", "Daily Motivation", "Fresh daily quotes, fitness tips, healthy habits, and challenges to keep you inspired.", url_for('motivation')),
+      ] %}
+      {% for icon, color, title, desc, link in features %}
+      <div class="col-md-6 col-lg-3">
+        <div class="card-fit p-4 h-100">
+          <div class="feature-icon {{ color }}">
+            <i class="bi {{ icon }}"></i>
+          </div>
+          <h5 class="fw-bold mb-2">{{ title }}</h5>
+          <p class="text-muted small mb-3">{{ desc }}</p>
+          <a href="{{ link }}" class="text-success fw-semibold small">
+            Explore <i class="bi bi-arrow-right ms-1"></i>
+          </a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ── How It Works ────────────────────────────────────────────────────────── -->
+<section class="py-5" style="background:var(--surface-2);">
+  <div class="container py-3">
+    <div class="text-center mb-5">
+      <span class="section-label"><i class="bi bi-diagram-3 me-1"></i> How It Works</span>
+      <h2 class="section-title">Start Your Fitness Journey in 3 Steps</h2>
+    </div>
+    <div class="row g-4 align-items-center">
+      <div class="col-md-4 text-center">
+        <div style="width:72px;height:72px;background:var(--primary);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:1.5rem;color:#fff;font-weight:800;">1</div>
+        <h5 class="fw-bold">Tell Us Your Goal</h5>
+        <p class="text-muted small">Choose from weight loss, muscle gain, endurance, or flexibility improvement.</p>
+      </div>
+      <div class="col-md-4 text-center">
+        <div style="width:72px;height:72px;background:#3b82f6;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:1.5rem;color:#fff;font-weight:800;">2</div>
+        <h5 class="fw-bold">Get Your AI Plan</h5>
+        <p class="text-muted small">Our IBM watsonx AI generates a personalised workout and nutrition plan instantly.</p>
+      </div>
+      <div class="col-md-4 text-center">
+        <div style="width:72px;height:72px;background:#8b5cf6;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:1.5rem;color:#fff;font-weight:800;">3</div>
+        <h5 class="fw-bold">Track & Progress</h5>
+        <p class="text-muted small">Log your workouts, track calories and water, visualise your progress on the dashboard.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Benefits ───────────────────────────────────────────────────────────── -->
+<section class="py-5">
+  <div class="container py-3">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6">
+        <span class="section-label"><i class="bi bi-shield-check me-1"></i> Benefits</span>
+        <h2 class="section-title mb-4">Why Choose FitBuddy AI?</h2>
+        {% set benefits = [
+          ("bi-cpu", "AI-Powered Intelligence", "IBM watsonx Granite models provide personalised recommendations that evolve with your progress."),
+          ("bi-phone", "100% Mobile Friendly", "Fully responsive design works seamlessly on phones, tablets, and desktops."),
+          ("bi-lock", "Privacy First", "All calculations happen locally. No personal data is stored on our servers."),
+          ("bi-infinity", "Always Learning", "Regular updates with new workouts, nutrition plans, and AI capabilities."),
+        ] %}
+        {% for icon, title, desc in benefits %}
+        <div class="d-flex gap-3 mb-4">
+          <div class="feature-icon green flex-shrink-0" style="width:44px;height:44px;min-width:44px;font-size:1.1rem;">
+            <i class="bi {{ icon }}"></i>
+          </div>
+          <div>
+            <h6 class="fw-bold mb-1">{{ title }}</h6>
+            <p class="text-muted small mb-0">{{ desc }}</p>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      <div class="col-lg-6">
+        <div style="background:linear-gradient(135deg,#0f172a,#1e3a2f);border-radius:var(--radius-xl);padding:2.5rem;">
+          <h5 class="text-white fw-bold mb-4">Quick Health Check</h5>
+          <div class="row g-3">
+            {% for label, val, icon, col in [
+              ("Ideal BMI Range","18.5–24.9","bi-person-check","#4ade80"),
+              ("Daily Calories","2000–2500 kcal","bi-fire","#fb923c"),
+              ("Water Intake","2–3 Litres","bi-droplet","#38bdf8"),
+              ("Weekly Exercise","150+ Minutes","bi-lightning","#a78bfa"),
+            ] %}
+            <div class="col-6">
+              <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:14px;">
+                <i class="bi {{ icon }} mb-2 d-block" style="font-size:1.4rem;color:{{ col }};"></i>
+                <div class="fw-bold text-white small">{{ val }}</div>
+                <div style="font-size:.72rem;color:rgba(255,255,255,.5);">{{ label }}</div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ─────────────────────────────────────────────────────────────────── -->
+<section class="py-5" style="background:linear-gradient(135deg,#0f172a 0%,#1e3a2f 100%);">
+  <div class="container py-3 text-center">
+    <h2 class="fw-bold text-white mb-3" style="font-size:2.2rem;letter-spacing:-1px;">
+      Ready to Transform Your Fitness?
+    </h2>
+    <p class="mb-4" style="color:rgba(255,255,255,.65);font-size:1.05rem;">Start your personalised AI fitness journey today — completely free.</p>
+    <div class="d-flex justify-content-center gap-3 flex-wrap">
+      <a href="{{ url_for('chat') }}" class="btn-primary-custom">
+        <i class="bi bi-robot"></i> Start AI Chat
+      </a>
+      <a href="{{ url_for('workout') }}" class="btn-outline-custom">
+        <i class="bi bi-calendar-check"></i> Get Workout Plan
+      </a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+{% block title %}Workout Planner – FitBuddy AI{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <div class="container text-center">
+    <span class="section-label"><i class="bi bi-lightning me-1"></i> Workout Planner</span>
+    <h1 class="page-hero-title mt-2">Build Your Perfect Workout Plan</h1>
+    <p class="page-hero-sub mt-2">Select your goal, fitness level, and available time to get a custom 7-day plan.</p>
+  </div>
+</div>
+
+<div class="container py-5">
+  <div class="row g-4">
+
+    <!-- Form -->
+    <div class="col-lg-4">
+      <div class="card-fit p-4 position-sticky" style="top:80px;">
+        <h5 class="fw-bold mb-4"><i class="bi bi-sliders me-2 text-success"></i>Customise Your Plan</h5>
+
+        <div class="mb-4">
+          <label class="form-label-fit">Fitness Goal</label>
+          <select class="form-select-fit" id="goalSelect">
+            <option value="weight_loss">Weight Loss</option>
+            <option value="muscle_gain">Muscle Gain</option>
+            <option value="endurance">Endurance</option>
+            <option value="flexibility">Flexibility</option>
+          </select>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label-fit">Fitness Level</label>
+          <div class="d-flex gap-2">
+            {% for level, label in [("beginner","Beginner"),("intermediate","Intermediate"),("advanced","Advanced")] %}
+            <label class="level-btn flex-1" style="flex:1;">
+              <input type="radio" name="level" value="{{ level }}" {% if level == 'beginner' %}checked{% endif %} style="display:none;" class="level-radio">
+              <span class="level-label d-block text-center p-2 border rounded-3 cursor-pointer small fw-semibold" style="cursor:pointer;">{{ label }}</span>
+            </label>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label-fit">Duration per Session</label>
+          <div class="d-flex align-items-center gap-3">
+            <input type="range" class="form-range flex-1" id="durationRange" min="15" max="90" step="5" value="45"
+              oninput="document.getElementById('durationVal').textContent=this.value">
+            <span class="fw-bold text-success" id="durationVal">45</span>
+            <span class="text-muted small">min</span>
+          </div>
+        </div>
+
+        <button class="btn-submit" onclick="generateWorkout()">
+          <i class="bi bi-lightning me-2"></i>Generate Workout Plan
+        </button>
+      </div>
+    </div>
+
+    <!-- Result -->
+    <div class="col-lg-8">
+      <div id="workoutResult" class="d-none fade-in">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <div>
+            <h4 class="fw-bold mb-1" id="planTitle">Your 7-Day Plan</h4>
+            <div class="text-muted small" id="planMeta"></div>
+          </div>
+          <button class="btn btn-sm btn-outline-success rounded-pill px-3" onclick="printPlan()">
+            <i class="bi bi-printer me-1"></i>Print
+          </button>
+        </div>
+        <div id="workoutDays"></div>
+
+        <!-- Summary cards -->
+        <div class="row g-3 mt-3">
+          <div class="col-4">
+            <div class="result-card">
+              <div class="result-value" id="summaryDays">7</div>
+              <div class="result-label">Days Planned</div>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="result-card">
+              <div class="result-value" id="summaryDuration" style="font-size:1.4rem;">45 min</div>
+              <div class="result-label">Per Session</div>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="result-card">
+              <div class="result-value" style="font-size:1.4rem;" id="summaryGoal">–</div>
+              <div class="result-label">Goal</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty state -->
+      <div id="workoutEmpty" class="text-center py-6 py-5">
+        <div style="font-size:5rem;margin-bottom:1rem;">🏋️</div>
+        <h5 class="fw-bold text-muted">Your workout plan will appear here</h5>
+        <p class="text-muted small">Select your preferences and click "Generate Workout Plan"</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Highlight selected level
+document.querySelectorAll('.level-radio').forEach(r => {
+  r.addEventListener('change', () => {
+    document.querySelectorAll('.level-label').forEach(l => {
+      l.style.cssText = 'background:white;color:#64748b;border-color:#e2e8f0;';
+    });
+    r.nextElementSibling.style.cssText = 'background:var(--primary);color:white;border-color:var(--primary);';
+  });
+});
+// Set default
+document.querySelector('.level-radio:checked').nextElementSibling.style.cssText =
+  'background:var(--primary);color:white;border-color:var(--primary);';
+
+const goalLabels = {weight_loss:'Weight Loss',muscle_gain:'Muscle Gain',endurance:'Endurance',flexibility:'Flexibility'};
+const icons = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+
+async function generateWorkout() {
+  const goal     = document.getElementById('goalSelect').value;
+  const level    = document.querySelector('.level-radio:checked').value;
+  const duration = document.getElementById('durationRange').value;
+
+  const res  = await fetch('/api/workout', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({goal, level, duration: parseInt(duration)}),
+  });
+  const data = await res.json();
+
+  document.getElementById('planTitle').textContent = `Your 7-Day ${goalLabels[goal]} Plan`;
+  document.getElementById('planMeta').textContent  = `${level.charAt(0).toUpperCase()+level.slice(1)} • ${duration} min/session`;
+  document.getElementById('summaryDuration').textContent = duration + ' min';
+  document.getElementById('summaryGoal').textContent = goalLabels[goal];
+
+  const daysEl = document.getElementById('workoutDays');
+  daysEl.innerHTML = '';
+  data.plan.forEach((day, i) => {
+    const isRest = day.toLowerCase().includes('rest');
+    daysEl.innerHTML += `
+      <div class="workout-day">
+        <div class="day-badge" style="background:${isRest?'#94a3b8':'var(--primary)'};">${icons[i]}</div>
+        <div>
+          <div class="fw-semibold small">${day}</div>
+          ${isRest ? '<span class="badge bg-light text-muted" style="font-size:.7rem;">Recovery Day</span>' :
+            `<span class="badge" style="background:var(--primary-light);color:var(--primary-dark);font-size:.7rem;">${duration} min</span>`}
+        </div>
+      </div>
+      ${i < data.plan.length-1 ? '<hr class="my-1 border-light">' : ''}`;
+  });
+
+  document.getElementById('workoutResult').classList.remove('d-none');
+  document.getElementById('workoutEmpty').classList.add('d-none');
+}
+
+function printPlan() { window.print(); }
+</script>
+{% endblock %}
