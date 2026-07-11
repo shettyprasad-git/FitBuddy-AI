@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+{% block title %}Water Intake Calculator – FitBuddy AI{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <div class="container text-center">
+    <span class="section-label"><i class="bi bi-droplet me-1"></i> Water Tracker</span>
+    <h1 class="page-hero-title mt-2">Daily Water Intake Calculator</h1>
+    <p class="page-hero-sub mt-2">Find out exactly how much water your body needs based on weight, activity, and climate.</p>
+  </div>
+</div>
+
+<div class="container py-5">
+  <div class="row g-5 justify-content-center">
+
+    <!-- Form -->
+    <div class="col-lg-4">
+      <div class="card-fit p-4">
+        <h5 class="fw-bold mb-4"><i class="bi bi-droplet me-2 text-info"></i>Your Profile</h5>
+
+        <div class="mb-4">
+          <label class="form-label-fit">Body Weight (kg)</label>
+          <input type="number" class="form-control-fit" id="waterWeight" placeholder="e.g. 70" min="20" max="300">
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label-fit">Activity Level</label>
+          <select class="form-select-fit" id="waterActivity">
+            <option value="sedentary">Sedentary (little/no exercise)</option>
+            <option value="light">Lightly Active (1–2 days/week)</option>
+            <option value="moderate" selected>Moderately Active (3–5 days/week)</option>
+            <option value="active">Very Active (6–7 days/week)</option>
+            <option value="very_active">Athlete / Daily Intense Training</option>
+          </select>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label-fit">Climate / Environment</label>
+          <select class="form-select-fit" id="waterClimate">
+            <option value="cold">Cold (< 10°C)</option>
+            <option value="temperate" selected>Temperate (10–25°C)</option>
+            <option value="warm">Warm (25–35°C)</option>
+            <option value="hot">Hot / Humid (> 35°C)</option>
+          </select>
+        </div>
+
+        <div id="waterAlert" class="alert-fit alert-danger mb-3 d-none"></div>
+
+        <button class="btn-submit" onclick="calculateWater()">
+          <i class="bi bi-droplet me-2"></i>Calculate Intake
+        </button>
+      </div>
+
+      <!-- Hydration facts -->
+      <div class="card-fit p-4 mt-4" style="background:var(--surface-2);">
+        <h6 class="fw-bold mb-3"><i class="bi bi-info-circle text-info me-2"></i>Why Hydration Matters</h6>
+        <ul class="small text-muted ps-3 mb-0">
+          <li class="mb-1">Your body is ~60% water by weight.</li>
+          <li class="mb-1">Even mild dehydration (2%) reduces performance by 10–20%.</li>
+          <li class="mb-1">Proper hydration boosts metabolism and reduces hunger.</li>
+          <li>Water aids in toxin removal and nutrient transport.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Result -->
+    <div class="col-lg-7">
+      <div id="waterResult" class="d-none fade-in">
+
+        <!-- Hero Result -->
+        <div class="text-center p-5 rounded-3 mb-4" style="background:linear-gradient(135deg,#0c4a6e,#075985);">
+          <div style="font-size:.85rem;font-weight:600;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.5px;">Daily Water Target</div>
+          <div id="waterLiters" style="font-size:5rem;font-weight:900;color:#38bdf8;line-height:1;margin:12px 0;">–</div>
+          <div style="font-size:1.1rem;color:rgba(255,255,255,.7);">Litres per Day</div>
+        </div>
+
+        <!-- Stats Row -->
+        <div class="row g-3 mb-4">
+          <div class="col-4">
+            <div class="result-card">
+              <div class="result-value" style="color:#38bdf8;" id="waterML">–</div>
+              <div class="result-label">Millilitres</div>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="result-card">
+              <div class="result-value" style="color:#6366f1;" id="waterGlasses">–</div>
+              <div class="result-label">Glasses (250ml)</div>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="result-card">
+              <div class="result-value" style="color:#10b981;" id="waterPerHour">–</div>
+              <div class="result-label">ml per hour</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Animated Water Glass -->
+        <div class="card-fit p-4 mb-4 text-center">
+          <h6 class="fw-bold mb-4">Hydration Progress</h6>
+          <div class="d-flex justify-content-center align-items-end gap-3 mb-3">
+            <div>
+              <div class="water-glass">
+                <div class="water-fill" id="waterFill"></div>
+                <div class="water-waves"></div>
+              </div>
+            </div>
+            <div class="text-start">
+              <p class="fw-bold text-info mb-2">Hydration Schedule</p>
+              <div id="waterSchedule" class="small text-muted"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tips -->
+        <div class="card-fit p-4" style="background:var(--surface-2);">
+          <h6 class="fw-bold mb-3"><i class="bi bi-lightbulb text-warning me-2"></i>Hydration Tips</h6>
+          <div class="row g-2">
+            {% for tip in [
+              "Drink a full glass of water upon waking.",
+              "Carry a reusable water bottle everywhere.",
+              "Set hourly reminders to drink water.",
+              "Eat water-rich foods (cucumber, watermelon, oranges).",
+              "Drink 500ml before exercise and 200ml every 20 min during.",
+              "Your urine should be pale yellow — clear means good hydration.",
+            ] %}
+            <div class="col-md-6">
+              <div class="d-flex gap-2">
+                <i class="bi bi-droplet-fill text-info flex-shrink-0 mt-1" style="font-size:.8rem;"></i>
+                <span class="small text-muted">{{ tip }}</span>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div id="waterEmpty" class="text-center py-5">
+        <div style="font-size:5rem;margin-bottom:1rem;">💧</div>
+        <h5 class="fw-bold text-muted">Enter your details to calculate water needs</h5>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+async function calculateWater() {
+  const weight   = document.getElementById('waterWeight').value;
+  const activity = document.getElementById('waterActivity').value;
+  const climate  = document.getElementById('waterClimate').value;
+  const alertEl  = document.getElementById('waterAlert');
+
+  alertEl.classList.add('d-none');
+  if (!weight || weight <= 0) {
+    alertEl.textContent = 'Please enter a valid weight.';
+    alertEl.classList.remove('d-none');
+    return;
+  }
+
+  const res  = await fetch('/api/water', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({weight: parseFloat(weight), activity, climate}),
+  });
+  const data = await res.json();
+
+  document.getElementById('waterLiters').textContent  = data.liters;
+  document.getElementById('waterML').textContent      = data.ml.toLocaleString();
+  document.getElementById('waterGlasses').textContent = data.glasses;
+  document.getElementById('waterPerHour').textContent = Math.round(data.ml / 16);
+
+  // Fill animation (map liters 1–4 to 20–100%)
+  const fillPct = Math.min(100, Math.max(20, (data.liters / 4) * 100));
+  setTimeout(() => {
+    document.getElementById('waterFill').style.height = fillPct + '%';
+  }, 200);
+
+  // Schedule
+  const glassesCount = data.glasses;
+  const wakeHour     = 7;
+  const schedule     = [];
+  for (let i = 0; i < Math.min(glassesCount, 8); i++) {
+    const hour    = wakeHour + Math.floor(i * (14 / 8));
+    const timeStr = `${hour > 12 ? hour - 12 : hour}:00 ${hour >= 12 ? 'PM' : 'AM'}`;
+    schedule.push(`<div class="mb-1"><i class="bi bi-clock me-1 text-info"></i>${timeStr} – 1 glass (250ml)</div>`);
+  }
+  document.getElementById('waterSchedule').innerHTML = schedule.join('');
+
+  document.getElementById('waterResult').classList.remove('d-none');
+  document.getElementById('waterEmpty').classList.add('d-none');
+}
+</script>
+{% endblock %}

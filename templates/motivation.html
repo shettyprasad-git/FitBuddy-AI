@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% block title %}Motivation – FitBuddy AI{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <div class="container text-center">
+    <span class="section-label"><i class="bi bi-stars me-1"></i> Motivation</span>
+    <h1 class="page-hero-title mt-2">Stay Inspired, Stay Active</h1>
+    <p class="page-hero-sub mt-2">Daily quotes, fitness tips, healthy habits, and challenges to fuel your journey.</p>
+  </div>
+</div>
+
+<div class="container py-5">
+
+  <!-- Quote + Refresh -->
+  <div class="row justify-content-center mb-5">
+    <div class="col-lg-8">
+      <div class="quote-card">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+          <span class="section-label" style="background:rgba(74,222,128,.15);color:#4ade80;border-color:rgba(74,222,128,.3);">
+            <i class="bi bi-quote me-1"></i> Daily Quote
+          </span>
+          <button onclick="refreshMotivation()" class="btn btn-sm" style="background:rgba(255,255,255,.1);color:#fff;border-radius:8px;border:1px solid rgba(255,255,255,.2);">
+            <i class="bi bi-arrow-clockwise me-1"></i>Refresh
+          </button>
+        </div>
+        <p class="quote-text" id="quoteText">{{ quote }}</p>
+        <div style="height:2px;background:linear-gradient(90deg,#4ade80,transparent);border-radius:2px;margin-top:1.5rem;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tip + Habit + Challenge -->
+  <div class="row g-4 mb-5">
+
+    <!-- Today's Tip -->
+    <div class="col-md-4">
+      <div class="card-fit p-4 h-100">
+        <div class="feature-icon green mb-3"><i class="bi bi-lightbulb"></i></div>
+        <div class="section-label mb-2"><i class="bi bi-lightbulb me-1"></i>Today's Fitness Tip</div>
+        <p class="text-muted small mb-0" id="tipText">{{ tip }}</p>
+      </div>
+    </div>
+
+    <!-- Today's Habit -->
+    <div class="col-md-4">
+      <div class="card-fit p-4 h-100">
+        <div class="feature-icon blue mb-3"><i class="bi bi-check2-circle"></i></div>
+        <div class="section-label mb-2" style="background:#dbeafe;color:#1d4ed8;"><i class="bi bi-check2-circle me-1"></i>Healthy Habit</div>
+        <p class="text-muted small mb-0" id="habitText">{{ habit }}</p>
+      </div>
+    </div>
+
+    <!-- Daily Challenge -->
+    <div class="col-md-4">
+      <div class="card-fit p-4 h-100">
+        <div class="feature-icon orange mb-3"><i class="bi bi-trophy"></i></div>
+        <div class="section-label mb-2" style="background:#ffedd5;color:#c2410c;"><i class="bi bi-trophy me-1"></i>Daily Challenge</div>
+        <h6 class="fw-bold mb-1" id="challengeTitle">{{ challenge.title }}</h6>
+        <p class="text-muted small mb-2" id="challengeDesc">{{ challenge.description }}</p>
+        <span class="challenge-badge" id="challengeBadge">{{ challenge.difficulty }}</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- All Tips -->
+  <div class="row g-4 mb-5">
+    <div class="col-lg-6">
+      <div class="card-fit p-4">
+        <h5 class="fw-bold mb-4"><i class="bi bi-lightbulb-fill text-warning me-2"></i>All Fitness Tips</h5>
+        {% for t in all_tips %}
+        <div class="d-flex gap-3 mb-3">
+          <div class="feature-icon green flex-shrink-0" style="width:36px;height:36px;min-width:36px;font-size:.9rem;border-radius:8px;">
+            {{ loop.index }}
+          </div>
+          <p class="small text-muted mb-0 mt-1">{{ t }}</p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="card-fit p-4">
+        <h5 class="fw-bold mb-4"><i class="bi bi-heart-fill text-danger me-2"></i>Healthy Daily Habits</h5>
+        {% for h in all_habits %}
+        <div class="d-flex gap-2 align-items-start mb-3">
+          <i class="bi bi-check-circle-fill text-success flex-shrink-0 mt-1" style="font-size:.9rem;"></i>
+          <p class="small text-muted mb-0">{{ h }}</p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- All Challenges -->
+  <div class="card-fit p-4">
+    <h5 class="fw-bold mb-4"><i class="bi bi-trophy-fill text-warning me-2"></i>Fitness Challenges</h5>
+    <div class="row g-3">
+      {% for ch in all_challenges %}
+      <div class="col-md-4">
+        <div style="background:var(--surface-2);border-radius:var(--radius);padding:1rem;">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <h6 class="fw-bold mb-0">{{ ch.title }}</h6>
+            <span class="challenge-badge badge-{{ ch.difficulty|lower }}">{{ ch.difficulty }}</span>
+          </div>
+          <p class="small text-muted mb-0">{{ ch.description }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+async function refreshMotivation() {
+  const res  = await fetch('/api/motivation/refresh');
+  const data = await res.json();
+
+  document.getElementById('quoteText').textContent     = data.quote;
+  document.getElementById('tipText').textContent       = data.tip;
+  document.getElementById('habitText').textContent     = data.habit;
+  document.getElementById('challengeTitle').textContent = data.challenge.title;
+  document.getElementById('challengeDesc').textContent  = data.challenge.description;
+
+  const badge = document.getElementById('challengeBadge');
+  badge.textContent  = data.challenge.difficulty;
+  badge.className    = 'challenge-badge badge-' + data.challenge.difficulty.toLowerCase();
+}
+</script>
+{% endblock %}

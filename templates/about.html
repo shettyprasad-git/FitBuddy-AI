@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+{% block title %}About – FitBuddy AI{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <div class="container text-center">
+    <span class="section-label"><i class="bi bi-info-circle me-1"></i> About</span>
+    <h1 class="page-hero-title mt-2">About FitBuddy AI</h1>
+    <p class="page-hero-sub mt-2">Powered by IBM watsonx Orchestrate and IBM Cloud Lite — AI-driven fitness coaching for everyone.</p>
+  </div>
+</div>
+
+<div class="container py-5">
+
+  <!-- About FitBuddy AI -->
+  <div class="row align-items-center g-5 mb-6 mb-5">
+    <div class="col-lg-6">
+      <span class="section-label"><i class="bi bi-heart-pulse me-1"></i> FitBuddy AI</span>
+      <h2 class="section-title mt-2 mb-4">Your Intelligent Fitness Companion</h2>
+      <p class="text-muted mb-3">
+        FitBuddy AI is a production-ready AI-powered fitness and wellness platform that brings personalised coaching to everyone —
+        regardless of fitness level, budget, or location.
+      </p>
+      <p class="text-muted mb-4">
+        Built with Python Flask, Bootstrap 5, and Chart.js, the application integrates seamlessly with
+        <strong>IBM watsonx Orchestrate</strong> to deliver intelligent, context-aware fitness guidance through
+        a natural conversation interface.
+      </p>
+      <div class="row g-3">
+        {% for icon, title, desc in [
+          ("bi-robot","AI Chat Coach","ChatGPT-style interface powered by IBM Granite models"),
+          ("bi-bar-chart","Progress Tracking","Interactive Chart.js dashboards for all metrics"),
+          ("bi-phone","Mobile Ready","Fully responsive Bootstrap 5 design"),
+          ("bi-cloud","Cloud Native","Deploy to IBM Cloud Lite in minutes"),
+        ] %}
+        <div class="col-6">
+          <div class="d-flex gap-2 align-items-start">
+            <i class="bi {{ icon }} text-success flex-shrink-0 mt-1" style="font-size:1.1rem;"></i>
+            <div>
+              <div class="fw-semibold small">{{ title }}</div>
+              <div class="text-muted" style="font-size:.78rem;">{{ desc }}</div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div style="background:linear-gradient(135deg,#0f172a,#1e3a2f);border-radius:var(--radius-xl);padding:2.5rem;">
+        <h5 class="text-white fw-bold mb-4">Technical Stack</h5>
+        {% for layer, tech, color in [
+          ("Frontend","HTML5, CSS3, Bootstrap 5.3, Chart.js 4","#4ade80"),
+          ("Backend","Python 3.11+, Flask 3.0","#60a5fa"),
+          ("AI Engine","IBM watsonx Orchestrate / Granite","#a78bfa"),
+          ("Deployment","IBM Cloud Lite, Gunicorn","#fb923c"),
+          ("Styling","Custom CSS, Glassmorphism, Animations","#f472b6"),
+        ] %}
+        <div class="d-flex justify-content-between align-items-center py-3 border-bottom border-secondary border-opacity-25">
+          <span style="color:rgba(255,255,255,.6);font-size:.82rem;">{{ layer }}</span>
+          <span style="color:{{ color }};font-size:.82rem;font-weight:600;">{{ tech }}</span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- IBM watsonx Section -->
+  <div class="ibm-card mb-4">
+    <div class="row align-items-center">
+      <div class="col-lg-8">
+        <h4 class="fw-bold mb-2"><i class="bi bi-cpu text-primary me-2"></i>IBM watsonx Orchestrate</h4>
+        <p class="text-muted mb-3">
+          IBM watsonx Orchestrate is an AI-powered automation platform that enables businesses and developers to
+          build, deploy, and scale intelligent AI agents. FitBuddy AI uses IBM watsonx to power its conversational
+          fitness coach, providing personalised responses using the <strong>IBM Granite 13B Chat</strong> foundation model.
+        </p>
+        <div class="row g-2">
+          {% for feature in ["Natural language understanding","Personalised fitness recommendations","Context-aware conversation","IBM Granite foundation models","Enterprise-grade security"] %}
+          <div class="col-md-6">
+            <div class="d-flex gap-2 align-items-center">
+              <i class="bi bi-check-circle-fill text-primary" style="font-size:.85rem;"></i>
+              <span class="small text-muted">{{ feature }}</span>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="col-lg-4 text-center mt-3 mt-lg-0">
+        <a href="https://www.ibm.com/products/watsonx-orchestrate" target="_blank" rel="noopener"
+           class="btn-primary-custom" style="display:inline-flex;">
+          <i class="bi bi-box-arrow-up-right"></i>Learn More
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- IBM Cloud Lite -->
+  <div class="card-fit p-4 mb-4" style="border-left:4px solid #10b981;">
+    <div class="row align-items-center">
+      <div class="col-lg-8">
+        <h4 class="fw-bold mb-2"><i class="bi bi-cloud-fill text-success me-2"></i>IBM Cloud Lite</h4>
+        <p class="text-muted mb-3">
+          IBM Cloud Lite gives developers free access to 40+ cloud services including watsonx AI, Cloudant databases,
+          Object Storage, and Cloud Foundry. FitBuddy AI is designed to deploy and run on IBM Cloud Lite at zero cost.
+        </p>
+        <div class="row g-2">
+          {% for f in ["Free tier — no credit card required","40+ services included","watsonx AI access","Global data centres","99.9% uptime SLA"] %}
+          <div class="col-md-6">
+            <div class="d-flex gap-2 align-items-center">
+              <i class="bi bi-check-circle-fill text-success" style="font-size:.85rem;"></i>
+              <span class="small text-muted">{{ f }}</span>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="col-lg-4 text-center mt-3 mt-lg-0">
+        <a href="https://cloud.ibm.com" target="_blank" rel="noopener"
+           class="btn-primary-custom" style="display:inline-flex;background:#10b981;">
+          <i class="bi bi-cloud"></i>Start for Free
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- How AI Powers FitBuddy -->
+  <div class="card-fit p-4">
+    <h5 class="fw-bold mb-4"><i class="bi bi-diagram-3 text-success me-2"></i>How AI Powers FitBuddy</h5>
+    <div class="row g-4">
+      {% for step, title, desc in [
+        ("1","User Sends Message","A user types a fitness question in the AI Chat interface."),
+        ("2","Flask Processes Request","The Flask backend receives the message at /api/chat."),
+        ("3","IBM watsonx Analysis","If configured, the message is sent to IBM watsonx Orchestrate with a fitness coaching system prompt."),
+        ("4","Granite Model Responds","The IBM Granite 13B Chat model generates a personalised, context-aware response."),
+        ("5","Fallback Intelligence","Without watsonx keys, the smart rule-based knowledge base provides high-quality responses."),
+        ("6","Response Rendered","The AI response is streamed back to the user with typing animation."),
+      ] %}
+      <div class="col-md-4">
+        <div class="d-flex gap-3">
+          <div style="width:32px;height:32px;background:var(--primary);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:.85rem;flex-shrink:0;">{{ step }}</div>
+          <div>
+            <div class="fw-semibold small mb-1">{{ title }}</div>
+            <p class="text-muted" style="font-size:.78rem;margin-bottom:0;">{{ desc }}</p>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+</div>
+{% endblock %}

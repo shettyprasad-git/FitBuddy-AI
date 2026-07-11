@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block title %}AI Chat – FitBuddy AI{% endblock %}
+{% block head_extra %}
+<link rel="preload" href="{{ url_for('static', filename='js/chat.js') }}" as="script">
+{% endblock %}
+
+{% block content %}
+<div class="chat-wrapper">
+
+  <!-- ── Sidebar ────────────────────────────────────────────── -->
+  <aside class="chat-sidebar">
+    <div class="chat-sidebar-header">
+      <div class="d-flex align-items-center gap-2">
+        <div style="width:36px;height:36px;background:var(--primary);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;">
+          <i class="bi bi-robot"></i>
+        </div>
+        <div>
+          <div class="fw-bold text-white small">FitBuddy AI</div>
+          <div style="font-size:.72rem;color:#4ade80;">&#x25CF; IBM watsonx Ready</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chat-sidebar-body">
+      <p class="text-muted small mb-2 px-1" style="color:rgba(255,255,255,.4) !important;font-size:.72rem;text-transform:uppercase;letter-spacing:.5px;">Suggested Prompts</p>
+      {% set prompts = [
+        "Create a weight loss workout plan for a beginner",
+        "What should I eat to build muscle?",
+        "How many calories do I need per day?",
+        "Recommend a vegan meal plan",
+        "What are the best HIIT exercises?",
+        "How much water should I drink daily?",
+        "Explain the benefits of yoga",
+        "How do I calculate my BMI?",
+        "Best foods for post-workout recovery",
+        "How to stay motivated to exercise?",
+      ] %}
+      {% for prompt in prompts %}
+      <button class="sidebar-prompt-btn" onclick="useSuggestedPrompt(this)" data-prompt="{{ prompt }}">
+        <i class="bi bi-chat-right-text me-2"></i>{{ prompt }}
+      </button>
+      {% endfor %}
+    </div>
+
+    <div class="chat-sidebar-footer">
+      <button class="sidebar-prompt-btn w-100 text-center" onclick="clearChat()" style="color:#f87171;border-color:rgba(248,113,113,.2);">
+        <i class="bi bi-trash me-2"></i>Clear Chat
+      </button>
+    </div>
+  </aside>
+
+  <!-- ── Main Chat ──────────────────────────────────────────── -->
+  <div class="chat-main">
+    <div class="chat-header">
+      <div class="d-flex align-items-center gap-3">
+        <div style="width:40px;height:40px;background:linear-gradient(135deg,var(--primary),#22d3ee);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.1rem;">
+          <i class="bi bi-robot"></i>
+        </div>
+        <div>
+          <div class="fw-bold">FitBuddy AI Coach</div>
+          <div class="text-muted small" id="aiSourceLabel">
+            <i class="bi bi-cpu me-1"></i>IBM watsonx Orchestrate
+          </div>
+        </div>
+      </div>
+      <button onclick="clearChat()" class="btn btn-sm btn-outline-danger rounded-pill px-3">
+        <i class="bi bi-trash me-1"></i>Clear
+      </button>
+    </div>
+
+    <!-- Messages -->
+    <div class="chat-messages" id="chatMessages">
+      <!-- Welcome message -->
+      <div class="message ai fade-in">
+        <div class="message-avatar ai-avatar"><i class="bi bi-robot"></i></div>
+        <div>
+          <div class="message-bubble">
+            <strong>Hello! I'm FitBuddy AI </strong><br>
+            I'm your personal fitness and wellness coach, powered by IBM watsonx Orchestrate.<br><br>
+            I can help you with:
+            <ul class="mb-0 mt-2">
+              <li>Workout planning &amp; exercise tips</li>
+              <li>Nutrition and meal guidance</li>
+              <li>BMI, calorie &amp; water calculations</li>
+              <li>Motivation and healthy habits</li>
+            </ul>
+            <br>What fitness goal would you like to work on today?
+          </div>
+          <div class="message-time">Just now</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Input Area -->
+    <div class="chat-input-area">
+      <div class="chat-input-wrap">
+        <textarea id="chatInput" placeholder="Ask me about workouts, nutrition, BMI, calories..." rows="1"
+          onkeydown="handleChatKeydown(event)"></textarea>
+        <button class="btn-send" id="sendBtn" onclick="sendMessage()">
+          <i class="bi bi-send-fill"></i>
+        </button>
+      </div>
+      <p class="text-muted small mt-2 mb-0 text-center" style="font-size:.72rem;">
+        <i class="bi bi-shield-check me-1"></i>FitBuddy AI provides general fitness guidance only. Consult a healthcare professional for medical advice.
+      </p>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+{% endblock %}

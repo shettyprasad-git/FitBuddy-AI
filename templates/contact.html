@@ -1,0 +1,223 @@
+{% extends "base.html" %}
+{% block title %}Contact – FitBuddy AI{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <div class="container text-center">
+    <span class="section-label"><i class="bi bi-envelope me-1"></i> Contact</span>
+    <h1 class="page-hero-title mt-2">Get In Touch</h1>
+    <p class="page-hero-sub mt-2">Have a question, feedback, or partnership inquiry? We'd love to hear from you.</p>
+  </div>
+</div>
+
+<div class="container py-5">
+  <div class="row g-5">
+
+    <!-- Contact Info -->
+    <div class="col-lg-4">
+      <h5 class="fw-bold mb-4">Contact Information</h5>
+      {% for icon, title, val, color in [
+        ("bi-envelope-fill","Email","hello@fitbuddyai.com","#16a34a"),
+        ("bi-globe","Website","www.fitbuddyai.com","#3b82f6"),
+        ("bi-linkedin","LinkedIn","FitBuddy AI","#0a66c2"),
+        ("bi-github","GitHub","github.com/fitbuddy-ai","#1e293b"),
+      ] %}
+      <div class="d-flex gap-3 mb-4 align-items-start">
+        <div class="feature-icon" style="background:{{ color }}18;color:{{ color }};width:44px;height:44px;min-width:44px;font-size:1.1rem;">
+          <i class="bi {{ icon }}"></i>
+        </div>
+        <div>
+          <div class="fw-semibold small">{{ title }}</div>
+          <div class="text-muted small">{{ val }}</div>
+        </div>
+      </div>
+      {% endfor %}
+
+      <!-- IBM Partner Banner -->
+      <div style="background:linear-gradient(135deg,#0f172a,#1e3a2f);border-radius:var(--radius-lg);padding:1.5rem;margin-top:2rem;">
+        <h6 class="text-white fw-bold mb-2"><i class="bi bi-cpu text-success me-2"></i>IBM watsonx Partner</h6>
+        <p class="small mb-3" style="color:rgba(255,255,255,.6);">
+          FitBuddy AI is built on IBM Cloud and ready for IBM watsonx Orchestrate integration.
+        </p>
+        <a href="{{ url_for('about') }}" class="text-success small fw-semibold">
+          Learn about the integration <i class="bi bi-arrow-right ms-1"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- Contact Form -->
+    <div class="col-lg-8">
+      <div class="card-fit p-4 p-lg-5">
+        <h5 class="fw-bold mb-4">Send a Message</h5>
+
+        <!-- Success/Error Alert -->
+        <div id="contactAlert" class="alert-fit mb-4 d-none"></div>
+
+        <form id="contactForm" novalidate>
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label class="form-label-fit">Full Name <span class="text-danger">*</span></label>
+              <input type="text" class="form-control-fit" id="contactName" placeholder="John Doe" required>
+              <div class="invalid-field d-none" id="nameErr">Please enter your name.</div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label-fit">Email Address <span class="text-danger">*</span></label>
+              <input type="email" class="form-control-fit" id="contactEmail" placeholder="john@example.com" required>
+              <div class="invalid-field d-none" id="emailErr">Please enter a valid email.</div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label-fit">Subject <span class="text-danger">*</span></label>
+            <select class="form-select-fit" id="contactSubject" required>
+              <option value="">Select a subject...</option>
+              <option value="general">General Inquiry</option>
+              <option value="feature">Feature Request</option>
+              <option value="bug">Bug Report</option>
+              <option value="partnership">Partnership / IBM Integration</option>
+              <option value="fitness">Fitness Advice</option>
+              <option value="other">Other</option>
+            </select>
+            <div class="invalid-field d-none" id="subjectErr">Please select a subject.</div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label-fit">Phone (Optional)</label>
+            <input type="tel" class="form-control-fit" id="contactPhone" placeholder="+1 (555) 000-0000">
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label-fit">Message <span class="text-danger">*</span></label>
+            <textarea class="form-control-fit" id="contactMessage" rows="5"
+              placeholder="Tell us how we can help you..." required style="resize:vertical;"></textarea>
+            <div class="d-flex justify-content-between mt-1">
+              <div class="invalid-field d-none" id="messageErr">Message must be at least 10 characters.</div>
+              <span class="text-muted small ms-auto" id="charCount">0 / 500</span>
+            </div>
+          </div>
+
+          <!-- Consent -->
+          <div class="d-flex gap-2 align-items-start mb-4">
+            <input type="checkbox" id="contactConsent" class="mt-1" style="accent-color:var(--primary);">
+            <label for="contactConsent" class="small text-muted">
+              I agree to FitBuddy AI storing my details to respond to this inquiry.
+              We will not share your data with third parties.
+            </label>
+          </div>
+          <div class="invalid-field d-none mb-3" id="consentErr">Please accept to proceed.</div>
+
+          <button type="submit" class="btn-submit" id="contactSubmit">
+            <i class="bi bi-send me-2"></i>Send Message
+          </button>
+        </form>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FAQ Section -->
+  <div class="row mt-5">
+    <div class="col-12">
+      <h5 class="fw-bold mb-4 text-center">Frequently Asked Questions</h5>
+      <div class="accordion" id="faqAccordion">
+        {% set faqs = [
+            ("Is FitBuddy AI free to use?", "Yes! FitBuddy AI is completely free. It runs on IBM Cloud Lite which provides free-tier hosting and AI services."),
+            ("Do I need an IBM watsonx API key?", "No — the app works fully without an API key using smart rule-based responses. Optionally configure IBM watsonx for advanced AI-powered conversations."),
+            ("How accurate are the BMI and calorie calculations?", "We use the Mifflin–St Jeor equation (1990 gold standard) for calorie calculations and standard WHO BMI formulas. Results are for guidance — consult a healthcare professional for medical decisions."),
+            ("Can I deploy FitBuddy AI on IBM Cloud?", "Yes! Run ibmcloud cf push fitbuddy-ai after logging in. The included app.json configures everything automatically."),
+            ("Is my data stored?", "BMI, calorie, and water calculations are performed in your browser. Chat history is stored in your session only and cleared when you close the browser."),
+          ] %}
+        {% for q, a in faqs %}
+          <div class="accordion-item border-0 mb-2">
+            <h2 class="accordion-header">
+              <button class="accordion-button {% if not loop.first %}collapsed{% endif %} fw-semibold" type="button"
+                data-bs-toggle="collapse" data-bs-target="#faq{{ loop.index }}"
+                style="background:var(--surface);border-radius:var(--radius)!important;font-size:.9rem;">
+                {{ q }}
+              </button>
+            </h2>
+            <div id="faq{{ loop.index }}" class="accordion-collapse collapse {% if loop.first %}show{% endif %}">
+              <div class="accordion-body text-muted small">{{ a }}</div>
+            </div>
+          </div>
+          {% endfor %}
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Character counter
+document.getElementById('contactMessage').addEventListener('input', function() {
+  const len = this.value.length;
+  const counter = document.getElementById('charCount');
+  counter.textContent = `${len} / 500`;
+  if (len > 450) counter.style.color = '#ef4444';
+  else counter.style.color = '';
+  if (len > 500) this.value = this.value.substring(0, 500);
+});
+
+function showErr(id, show) {
+  document.getElementById(id).classList.toggle('d-none', !show);
+}
+
+function setFieldStyle(id, valid) {
+  const el = document.getElementById(id);
+  el.style.borderColor = valid ? '' : '#ef4444';
+}
+
+document.getElementById('contactForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  const name    = document.getElementById('contactName').value.trim();
+  const email   = document.getElementById('contactEmail').value.trim();
+  const subject = document.getElementById('contactSubject').value;
+  const message = document.getElementById('contactMessage').value.trim();
+  const consent = document.getElementById('contactConsent').checked;
+
+  let valid = true;
+
+  // Validate
+  showErr('nameErr',    !name);         setFieldStyle('contactName',    !!name);    if (!name) valid = false;
+  showErr('emailErr',   !email || !email.includes('@')); setFieldStyle('contactEmail', !!(email && email.includes('@'))); if (!email || !email.includes('@')) valid = false;
+  showErr('subjectErr', !subject);      setFieldStyle('contactSubject', !!subject); if (!subject) valid = false;
+  showErr('messageErr', message.length < 10); setFieldStyle('contactMessage', message.length >= 10); if (message.length < 10) valid = false;
+  showErr('consentErr', !consent);      if (!consent) valid = false;
+
+  if (!valid) return;
+
+  const btn = document.getElementById('contactSubmit');
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+
+  try {
+    const res  = await fetch('/api/contact', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({name, email, subject, message}),
+    });
+    const data = await res.json();
+    const alertEl = document.getElementById('contactAlert');
+
+    if (data.status === 'success') {
+      alertEl.textContent = data.message;
+      alertEl.className   = 'alert-fit alert alert-success mb-4 fade-in';
+      this.reset();
+      document.getElementById('charCount').textContent = '0 / 500';
+    } else {
+      alertEl.textContent = data.error || 'Something went wrong.';
+      alertEl.className   = 'alert-fit alert alert-danger mb-4 fade-in';
+    }
+  } catch {
+    document.getElementById('contactAlert').textContent = 'Network error. Please try again.';
+    document.getElementById('contactAlert').className   = 'alert-fit alert alert-danger mb-4';
+  } finally {
+    btn.textContent = 'Send Message';
+    btn.disabled = false;
+  }
+});
+</script>
+{% endblock %}
